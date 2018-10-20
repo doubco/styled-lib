@@ -205,7 +205,7 @@ class StyledLib {
           ? SIZE.options[SIZE.options.length - 1]
           : SIZE.options[idx + change];
       } else {
-        return idx - change < 0 ? SIZE.options[0] : SIZE.options[idx - change];
+        return idx + change < 0 ? SIZE.options[0] : SIZE.options[idx + change];
       }
     }
     return size;
