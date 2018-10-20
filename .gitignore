@@ -1,0 +1,7 @@
+/node_modules/
+/lib/
+
+*.sublime-workspace
+*.sublime-project
+
+/.scenes/node_modules/
