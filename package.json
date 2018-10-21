@@ -1,6 +1,6 @@
 {
   "name": "styled-lib",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Helpers and Theme manager for styled-components",
   "main": "lib/index.js",
   "commonjs": "lib/index.cjs.js",

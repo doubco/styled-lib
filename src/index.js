@@ -309,9 +309,9 @@ class StyledLib {
 
     let methods = {
       // generic color getter
-      get: (x, key, force) => {
-        let variant = x;
-        if (isArray(x)) variant = x[0];
+      get: (v, key = VARIANT.mainKey, force) => {
+        let variant = v;
+        if (isArray(v)) variant = v[0];
 
         return p => {
           let schema = p.theme[VARIANT.themeKey];
@@ -364,7 +364,8 @@ class StyledLib {
     this.colorAPIsWithValue.forEach(func => {
       methods[func] = (value, variant, key) => {
         return p => {
-          return polished[func](value, methods.get(variant, key)(p));
+          let color = methods.get(variant, key)(p);
+          return color ? polished[func](value, color) : null;
         };
       };
     });
@@ -372,7 +373,8 @@ class StyledLib {
     this.colorAPIs.forEach(func => {
       methods[func] = (variant, key) => {
         return p => {
-          return polished[func](methods.get(variant, key)(p));
+          let color = methods.get(variant, key)(p);
+          return color ? polished[func](color) : null;
         };
       };
     });
