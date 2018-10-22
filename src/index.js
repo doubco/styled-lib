@@ -277,10 +277,14 @@ class StyledLib {
     UNIT HELPER
     ${unit(fn,"px")}
   */
-  unit(fn, unit) {
+  unit(x, unit) {
     const { UNIT } = this.options;
     return p => {
-      return `${fn(p)}${unit || UNIT.default}`;
+      let value = x;
+      if (isFunction(x)) {
+        value = x(p);
+      }
+      return `${value}${unit || UNIT.default}`;
     };
   }
   /*
