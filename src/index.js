@@ -34,6 +34,7 @@ class StyledLib {
         optionsAsProp: true,
         contrastKey: "contrast",
         mainKey: "main",
+        asTransient: false,
         ...options.VARIANT
       },
 
@@ -43,6 +44,7 @@ class StyledLib {
         themeKey: "depth",
         default: "base",
         asProp: true,
+        asTransient: false,
         options: [
           "base",
           "flat",
@@ -58,6 +60,7 @@ class StyledLib {
       SIZE: {
         key: "size",
         asProp: true,
+        asTransient: false,
         options: [
           "micro",
           "small",
@@ -82,6 +85,7 @@ class StyledLib {
 
       // OPERATORS
       OPERATORS: {
+        transient: "$",
         unit: "|",
         size: ":",
         nin: " nin ",
@@ -92,7 +96,6 @@ class StyledLib {
         gte: " >= ",
         lt: " < ",
         lte: " <= ",
-        scale: " as ",
         ...options.OPERATORS
       }
     };
@@ -101,10 +104,9 @@ class StyledLib {
     this.sizer = this.sizer.bind(this);
 
     this.get = this.get.bind(this);
-    this.p = this.p.bind(this);
+    this.prop = this.prop.bind(this);
     this.unit = this.unit.bind(this);
     this.size = this.size.bind(this);
-    this.scale = this.scale.bind(this);
 
     this.match = this.match.bind(this);
     this.or = this.or.bind(this);
@@ -143,8 +145,8 @@ class StyledLib {
       sizer: this.sizer,
       // getters
       get: this.get,
-      p: this.p, // short helper
-      prop: this.p,
+      p: this.prop, // short helper
+      prop: this.prop,
       // theming helpers
       variant: this.variant,
       depth: this.depth,
@@ -204,7 +206,7 @@ class StyledLib {
   */
   uiProps(props, otherKeys = []) {
     const ui = {};
-    const { UIPROPS, VARIANT, DEPTH, SIZE } = this.options;
+    const { UIPROPS, OPERATORS, VARIANT, DEPTH, SIZE } = this.options;
 
     let keys = [
       ...UIPROPS,
@@ -216,19 +218,37 @@ class StyledLib {
     ];
 
     if (VARIANT.asProp) {
-      keys = [...keys, ...Object.keys(this.theme[VARIANT.themeKey])];
+      let variantKeys = [...Object.keys(this.theme[VARIANT.themeKey])];
+      if (VARIANT.asTransient) {
+        variantKeys = variantKeys.map(k => `${OPERATORS.transient}${k}`);
+      }
+      keys = [...keys, ...variantKeys];
     }
 
     if (VARIANT.optionsAsProp) {
-      keys = [...keys, ...VARIANT.options];
+      let variantOptionsKeys = [...VARIANT.options];
+      if (VARIANT.asTransient) {
+        variantOptionsKeys = variantOptionsKeys.map(
+          k => `${OPERATORS.transient}${k}`
+        );
+      }
+      keys = [...keys, ...variantOptionsKeys];
     }
 
     if (SIZE.asProp) {
-      keys = [...keys, ...SIZE.options];
+      let sizeKeys = [...SIZE.options];
+      if (SIZE.asTransient) {
+        sizeKeys = sizeKeys.map(k => `${OPERATORS.transient}${k}`);
+      }
+      keys = [...keys, ...sizeKeys];
     }
 
     if (DEPTH.asProp) {
-      keys = [...keys, ...DEPTH.options];
+      let depthKeys = [...DEPTH.options];
+      if (DEPTH.asTransient) {
+        depthKeys = depthKeys.map(k => `${OPERATORS.transient}${k}`);
+      }
+      keys = [...keys, ...depthKeys];
     }
 
     keys.forEach(key => {
@@ -260,7 +280,7 @@ class StyledLib {
     PROP HELPER
     ${prop(`align`)}
   */
-  p(k) {
+  prop(k) {
     const { OPERATORS } = this.options;
     let key = k;
     if (isArray(k)) key = k[0];
@@ -299,7 +319,7 @@ class StyledLib {
     ${variant.opacify(0.1, "positive")}
   */
   get variant() {
-    const { VARIANT } = this.options;
+    const { OPERATORS, VARIANT } = this.options;
 
     let methods = {
       // generic color getter
@@ -308,20 +328,24 @@ class StyledLib {
         if (isArray(v)) variant = v[0];
 
         return p => {
+          const pp = k => {
+            return VARIANT.asTransient ? p[`${OPERATORS.transient}${k}`] : p[k];
+          };
+
           let schema = p.theme[VARIANT.themeKey];
           let activeVariant = VARIANT.default;
 
           // allow variant depths as props on component
           if (!force && VARIANT.optionsAsProp && key != VARIANT.contrastKey) {
             VARIANT.options.forEach(k => {
-              if (p[k]) key = k;
+              if (pp(k)) key = k;
             });
           }
 
           // allow variants as props on component
           if (VARIANT.asProp) {
             Object.keys(schema).forEach(v => {
-              if (p[v]) {
+              if (pp(v)) {
                 activeVariant = v;
               }
             });
@@ -336,9 +360,9 @@ class StyledLib {
           if (variant && schema[variant]) {
             // variant with key
             activeVariant = variant;
-          } else if (p[VARIANT.key] && schema[p[VARIANT.key]]) {
+          } else if (pp(VARIANT.key) && schema[pp(VARIANT.key)]) {
             // variant from theme and component with key
-            activeVariant = p[VARIANT.key];
+            activeVariant = pp(VARIANT.key);
           }
 
           return ref(schema[activeVariant], key);
@@ -383,21 +407,25 @@ class StyledLib {
     ${depth.base} >> depth direct helper
   */
   get depth() {
-    const { DEPTH } = this.options;
+    const { OPERATORS, DEPTH } = this.options;
 
     let methods = {
       get: key => {
         return p => {
+          const pp = k => {
+            return DEPTH.asTransient ? p[`${OPERATORS.transient}${k}`] : p[k];
+          };
+
           let options = p.theme[DEPTH.themeKey];
 
           if (!key) {
             if (DEPTH.asProp) {
               DEPTH.options.forEach(k => {
-                if (p[k]) key = k;
+                if (pp(k)) key = k;
               });
             }
 
-            if (p[DEPTH.key]) key = p[DEPTH.key];
+            if (pp(DEPTH.key)) key = pp(DEPTH.key);
           }
 
           if (!key) {
@@ -431,15 +459,19 @@ class StyledLib {
     if (isArray(k)) k = k[0];
 
     return p => {
+      const pp = k => {
+        return SIZE.asTransient ? p[`${OPERATORS.transient}${k}`] : p[k];
+      };
+
       let x = k.split(".");
       let y = k.split(OPERATORS.size);
 
-      let size = p.size || SIZE.default;
+      let size = pp(SIZE.key) || SIZE.default;
 
       // allow sizes as props on component
       if (SIZE.asProp) {
         SIZE.options.forEach(v => {
-          if (p[v]) size = v;
+          if (pp(v)) size = v;
         });
       }
 
@@ -460,31 +492,6 @@ class StyledLib {
       let unit = "";
       this.unitOptions.forEach(i => {
         if (str.indexOf(i) > -1) unit = i.replace(OPERATORS.unit, "");
-        str = str.replace(i, "");
-      });
-      return `${ref(p.theme, str)}${unit}`;
-    };
-  }
-
-  /*
-    SCALE
-    ${scale`padding as spacing`} >> active size
-  */
-  scale(key) {
-    const { OPERATORS, SIZE } = this.options;
-
-    let k = key;
-    if (isArray(k)) k = k[0];
-
-    return p => {
-      let x = k.split(OPERATORS.scale);
-
-      let size = p[x[0]] || SIZE.default;
-      let str = `${x[1]}.${size}`;
-
-      let unit = "";
-      this.unitOptions.forEach(i => {
-        if (str.indexOf(i) > -1) unit = i.replace("|", "");
         str = str.replace(i, "");
       });
       return `${ref(p.theme, str)}${unit}`;

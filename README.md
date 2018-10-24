@@ -381,14 +381,6 @@ and("normal","!!hidden",is.color("iconColor"))
 
 > this is a low level method, you can use it with `cond` helper
 
-### scale (Beta)
-
-Helps use one variables like other.
-
-```
-${scale`padding as spacing`} >> active size
-```
-
 ### uiProps
 
 Helps pass your custom and pre-defined prop keys to components
