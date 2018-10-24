@@ -208,14 +208,23 @@ class StyledLib {
     const ui = {};
     const { UIPROPS, OPERATORS, VARIANT, DEPTH, SIZE } = this.options;
 
-    let keys = [
-      ...UIPROPS,
-      VARIANT.key,
-      SIZE.key,
-      DEPTH.key,
-      ...otherKeys,
-      "gutter"
-    ];
+    let keys = [...UIPROPS, ...otherKeys];
+
+    if (VARIANT.asTransient) {
+      keys.push(`${OPERATORS.transient}${VARIANT.key}`);
+    } else {
+      keys.push(VARIANT.key);
+    }
+    if (SIZE.asTransient) {
+      keys.push(`${OPERATORS.transient}${SIZE.key}`);
+    } else {
+      keys.push(SIZE.key);
+    }
+    if (DEPTH.asTransient) {
+      keys.push(`${OPERATORS.transient}${DEPTH.key}`);
+    } else {
+      keys.push(DEPTH.key);
+    }
 
     if (VARIANT.asProp) {
       let variantKeys = [...Object.keys(this.theme[VARIANT.themeKey])];
@@ -254,6 +263,7 @@ class StyledLib {
     keys.forEach(key => {
       ui[key] = props[key];
     });
+
     return ui;
   }
 
