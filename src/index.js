@@ -101,7 +101,7 @@ class StyledLib {
     this.sizer = this.sizer.bind(this);
 
     this.get = this.get.bind(this);
-    this.prop = this.prop.bind(this);
+    this.p = this.p.bind(this);
     this.unit = this.unit.bind(this);
     this.size = this.size.bind(this);
     this.scale = this.scale.bind(this);
@@ -143,8 +143,8 @@ class StyledLib {
       sizer: this.sizer,
       // getters
       get: this.get,
-      p: this.prop, // short helper
-      prop: this.prop,
+      p: this.p, // short helper
+      prop: this.p,
       // theming helpers
       variant: this.variant,
       depth: this.depth,
