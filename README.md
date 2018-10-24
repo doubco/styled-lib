@@ -434,12 +434,6 @@ const Lib = new StyledLib({
 
 ```
 {
-  // typography options
-  TYPOGRAPHY: {
-    themeKey: "font",
-    ...options.TYPOGRAPHY
-  },
-
   // variant/color options
   VARIANT: {
     key: "variant",

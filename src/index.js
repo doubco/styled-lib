@@ -24,12 +24,6 @@ class StyledLib {
 
     this.theme = theme;
     this.options = {
-      // typography options
-      TYPOGRAPHY: {
-        themeKey: "font",
-        ...options.TYPOGRAPHY
-      },
-
       // variant/color options
       VARIANT: {
         key: "variant",
@@ -77,18 +71,17 @@ class StyledLib {
         ...options.SIZE
       },
 
+      // prop options
+      UIPROPS: [...options.UIPROPS],
+
       // unit options
       UNIT: {
         default: "px",
         ...options.UNIT
       },
 
-      // prop options
-      UIPROPS: [...options.UIPROPS],
-
       // OPERATORS
       OPERATORS: {
-        scale: " as ",
         unit: "|",
         size: ":",
         nin: " nin ",
@@ -99,13 +92,10 @@ class StyledLib {
         gte: " >= ",
         lt: " < ",
         lte: " <= ",
+        scale: " as ",
         ...options.OPERATORS
       }
     };
-    //
-    // this.typography = this.typography.bind(this);
-    // this.gutter = this.gutter.bind(this);
-    // this.wrapper = this.wrapper.bind(this);
 
     this.uiProps = this.uiProps.bind(this);
     this.sizer = this.sizer.bind(this);
@@ -148,10 +138,6 @@ class StyledLib {
       ...this.mixins,
       // theme
       theme: this.theme,
-      // css helpers
-      // typography: this.typography,
-      // gutter: this.gutter,
-      // wrapper: this.wrapper,
       // component helpers
       uiProps: this.uiProps,
       sizer: this.sizer,
@@ -359,7 +345,7 @@ class StyledLib {
     // variant main helper
     methods[VARIANT.mainKey] = p => methods.get(null, VARIANT.mainKey)(p);
 
-    // variant depth helpers
+    // variant options
     VARIANT.options.forEach(k => {
       methods[k] = p => methods.get(null, k)(p);
     });
@@ -395,15 +381,17 @@ class StyledLib {
   get depth() {
     const { DEPTH } = this.options;
 
-    let d = {
+    let methods = {
       get: key => {
         return p => {
           let options = p.theme[DEPTH.themeKey];
 
           if (!key) {
-            DEPTH.options.forEach(k => {
-              if (p[k]) key = k;
-            });
+            if (DEPTH.asProp) {
+              DEPTH.options.forEach(k => {
+                if (p[k]) key = k;
+              });
+            }
 
             if (p[DEPTH.key]) key = p[DEPTH.key];
           }
@@ -418,14 +406,14 @@ class StyledLib {
     };
 
     // depth main helper
-    d.active = p => d.get()(p);
+    methods.active = p => methods.get()(p);
 
     // depth helpers
     DEPTH.options.forEach(k => {
-      d[k] = p => d.get(k)(p);
+      methods[k] = p => methods.get(k)(p);
     });
 
-    return d;
+    return methods;
   }
 
   /*
