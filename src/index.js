@@ -143,6 +143,7 @@ class StyledLib {
       sizer: this.sizer,
       // getters
       get: this.get,
+      p: this.prop, // short helper
       prop: this.prop,
       // theming helpers
       variant: this.variant,
@@ -240,22 +241,37 @@ class StyledLib {
     GET HELPER
     ${get`spacing.normal`}
   */
-  get(v, v2) {
-    let variable = v;
-    if (isArray(variable)) variable = variable[0];
-    let variable2 = v2;
-    if (isArray(variable2)) variable2 = variable2[0];
+  get(v) {
+    const { OPERATORS } = this.options;
+    let key = v;
+    if (isArray(key)) key = key[0];
 
     return p => {
-      if (variable2) {
-        if (isFunction(variable2)) {
-          return ref(ref(p.theme, variable), variable2(p));
-        } else {
-          return ref(ref(p.theme, variable), variable2);
-        }
-      } else {
-        return ref(p.theme, variable);
-      }
+      let unit = "";
+      this.unitOptions.forEach(i => {
+        if (key.indexOf(i) > -1) unit = i.replace(OPERATORS.unit, "");
+        key = key.replace(i, "");
+      });
+      return `${ref(p.theme, key)}${unit}`;
+    };
+  }
+
+  /*
+    PROP HELPER
+    ${prop(`align`)}
+  */
+  p(k) {
+    const { OPERATORS } = this.options;
+    let key = k;
+    if (isArray(k)) key = k[0];
+
+    return p => {
+      let unit = "";
+      this.unitOptions.forEach(i => {
+        if (key.indexOf(i) > -1) unit = i.replace(OPERATORS.unit, "");
+        key = key.replace(i, "");
+      });
+      return `${ref(p, key)}${unit}`;
     };
   }
 
@@ -271,18 +287,6 @@ class StyledLib {
         value = x(p);
       }
       return `${value}${unit || UNIT.default}`;
-    };
-  }
-  /*
-    PROP HELPER
-    ${prop(`overflow`)}
-  */
-  prop(k) {
-    let key = k;
-    if (isArray(k)) key = k[0];
-
-    return p => {
-      return ref(p, key);
     };
   }
 
@@ -455,12 +459,13 @@ class StyledLib {
 
       let unit = "";
       this.unitOptions.forEach(i => {
-        if (str.indexOf(i) > -1) unit = i.replace("|", "");
+        if (str.indexOf(i) > -1) unit = i.replace(OPERATORS.unit, "");
         str = str.replace(i, "");
       });
       return `${ref(p.theme, str)}${unit}`;
     };
   }
+
   /*
     SCALE
     ${scale`padding as spacing`} >> active size

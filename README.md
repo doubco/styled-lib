@@ -191,7 +191,7 @@ padding: ${get`card.padding.size`}px;
 ...
 ```
 
-### prop
+### p (prop)
 
 Gets props from Component prop.
 
