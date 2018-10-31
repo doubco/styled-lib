@@ -206,61 +206,66 @@ class StyledLib {
     ACTIVE
     {active(this.props)}
   */
-  active(p) {
+  active(p, types = ["variant", "size", "depth"]) {
     const { SIZE, VARIANT, DEPTH, OPERATORS } = this.options;
-
     let active = {
       variant: null,
       depth: null,
       size: null
     };
 
-    const pp = k => {
-      return VARIANT.asTransient ? p[`${OPERATORS.transient}${k}`] : p[k];
-    };
+    if (types.includes("variant")) {
+      const pp = k => {
+        return VARIANT.asTransient ? p[`${OPERATORS.transient}${k}`] : p[k];
+      };
 
-    let schema = this.theme[VARIANT.themeKey];
-    active.variant = VARIANT.default;
+      let schema = this.theme[VARIANT.themeKey];
+      active.variant = VARIANT.default;
 
-    if (VARIANT.asProp) {
-      Object.keys(schema).forEach(v => {
-        if (pp(v)) {
-          active.variant = v;
-        }
-      });
+      if (VARIANT.asProp) {
+        Object.keys(schema).forEach(v => {
+          if (pp(v)) {
+            active.variant = v;
+          }
+        });
+      }
+
+      if (pp(VARIANT.key) && schema[pp(VARIANT.key)]) {
+        active.variant = pp(VARIANT.key);
+      }
     }
 
-    if (pp(VARIANT.key) && schema[pp(VARIANT.key)]) {
-      active.variant = pp(VARIANT.key);
+    if (types.includes("size")) {
+      const pp = k => {
+        return SIZE.asTransient ? p[`${OPERATORS.transient}${k}`] : p[k];
+      };
+
+      active.size = SIZE.default;
+
+      if (SIZE.asProp) {
+        SIZE.options.forEach(v => {
+          if (pp(v)) active.size = v;
+        });
+      }
+
+      if (pp(SIZE.key)) active.size = pp(SIZE.key);
     }
 
-    const pp = k => {
-      return SIZE.asTransient ? p[`${OPERATORS.transient}${k}`] : p[k];
-    };
+    if (types.includes("depth")) {
+      const pp = k => {
+        return DEPTH.asTransient ? p[`${OPERATORS.transient}${k}`] : p[k];
+      };
 
-    active.size = SIZE.default;
+      active.depth = DEPTH.default;
 
-    if (SIZE.asProp) {
-      SIZE.options.forEach(v => {
-        if (pp(v)) active.size = v;
-      });
+      if (DEPTH.asProp) {
+        DEPTH.options.forEach(k => {
+          if (pp(k)) active.depth = k;
+        });
+      }
+
+      if (pp(DEPTH.key)) active.depth = pp(DEPTH.key);
     }
-
-    if (pp(SIZE.key)) active.size = pp(SIZE.key);
-
-    const pp = k => {
-      return DEPTH.asTransient ? p[`${OPERATORS.transient}${k}`] : p[k];
-    };
-
-    active.depth = DEPTH.default;
-
-    if (DEPTH.asProp) {
-      DEPTH.options.forEach(k => {
-        if (pp(k)) active.depth = k;
-      });
-    }
-
-    if (pp(DEPTH.key)) active.depth = pp(DEPTH.key);
 
     return active;
   }
