@@ -37,16 +37,16 @@ import UI from "./theme";
 const { cond, is, variant, size, wrapper } = UI;
 
 export const Wrapper = styled.section`
-  ${gutter(size`card.gutter`) // custom mixin};
+  ${gutter(size`card.gutter`) /* custom mixin */ };
   width: 100%;
-  height: ${cond({ if: "liquid", then: "100%", else: null }) // conditions };
+  height: ${cond({ if: "liquid", then: "100%", else: null }) /* conditions */ };
   margin-top: ${cond({
     if: is.in("margin","top"),
     then: size`card:wrapper.margin|px`,
-    else: null }) // conditions
+    else: null }) /* conditions */
   };
-  padding: ${size`card:wrapper.padding|px` // sizing };
-  background: ${variant.main // variants };
+  padding: ${size`card:wrapper.padding|px` /* sizing */ };
+  background: ${variant.main /* variants */ };
 `;
 ```
 
