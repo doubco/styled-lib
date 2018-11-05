@@ -5,7 +5,7 @@
 You can ...
 
 - manage your theme variables
-- write readable styled components
+- write more readable styled components
 - manage your mixins
 - easy `polished` support for all your colors
 
@@ -13,7 +13,7 @@ You can ...
 
 Before:
 
-```
+```es6
 export const Wrapper = styled.section`
   ${gutter(8) // custom mixin};
   width: 100%;
@@ -32,7 +32,7 @@ export const Wrapper = styled.section`
 
 After:
 
-```
+```js
 import UI from "./theme";
 const { cond, is, variant, size, wrapper } = UI;
 
@@ -58,7 +58,7 @@ export const Wrapper = styled.section`
 
 theme.js
 
-```
+```js
 import StyledLib from "../utils/styled-lib";
 import * as allMixins from "./mixins";
 
@@ -102,7 +102,7 @@ export default {
 
 App.js
 
-```
+```js
 import { theme } from "./theme"
 
 export const = App (props)=>{
@@ -116,7 +116,7 @@ export const = App (props)=>{
 
 Button/styled.js
 
-```
+```js
 import UI from "./theme";
 const { cond, is, variant, size, wrapper // mixin } = UI;
 ```
@@ -127,7 +127,7 @@ const { cond, is, variant, size, wrapper // mixin } = UI;
 
 Button/index.js
 
-```
+```js
 import UI from "../../theme";
 const { uiProps } = UI;
 
@@ -147,7 +147,7 @@ class Button extends React.Component {
 
 home.js
 
-```
+```js
 <Button black large margin={["top","left"]}>Login</>
 ```
 
@@ -412,7 +412,7 @@ You can change `styled-lib` default options.
 
 #### Usage
 
-```
+```js
 const Lib = new StyledLib({
   mixins: allMixins,
   theme: themeVars,
@@ -424,7 +424,7 @@ const Lib = new StyledLib({
 
 #### Default options
 
-```
+```js
 {
   // variant/color options
   VARIANT: {
@@ -504,7 +504,7 @@ const Lib = new StyledLib({
 
 Just wrap your mixins like this.
 
-```
+```js
 export default ({
   options, cond, is, or, get, size
   // you can use any helper styled-lib provides + your options
@@ -515,7 +515,7 @@ export default ({
 };
 ```
 
-```
+```js
 export const Button = styled.div`
   ${gutter(size`card.gutter`)};
 `
