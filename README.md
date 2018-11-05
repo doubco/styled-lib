@@ -435,8 +435,7 @@ const Lib = new StyledLib({
     asProp: true,
     optionsAsProp: true,
     contrastKey: "contrast",
-    mainKey: "main",
-    ...options.VARIANT
+    mainKey: "main"
   },
 
   // depth options
@@ -452,8 +451,7 @@ const Lib = new StyledLib({
       "overlay",
       "superior",
       "declaration"
-    ],
-    ...options.DEPTH
+    ]
   },
 
   // size options
@@ -469,18 +467,16 @@ const Lib = new StyledLib({
       "huge",
       "extreme"
     ],
-    default: "normal",
-    ...options.SIZE
+    default: "normal"
   },
 
   // unit options
   UNIT: {
-    default: "px",
-    ...options.UNIT
+    default: "px"
   },
 
   // prop options
-  UIPROPS: [...options.UIPROPS],
+  UIPROPS: [],
 
   // OPERATORS
   OPERATORS: {
@@ -494,8 +490,7 @@ const Lib = new StyledLib({
     gt: " > ",
     gte: " >= ",
     lt: " < ",
-    lte: " <= ",
-    ...options.OPERATORS
+    lte: " <= "
   }
 };
 ```
@@ -510,7 +505,7 @@ export default ({
   // you can use any helper styled-lib provides + your options
 }) => {
   return (s, width, height) => {
-    return p => { return // your mixin code will be here };
+    return p => { return; } // your mixin code will be here ;
   };
 };
 ```
