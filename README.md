@@ -5,7 +5,7 @@
 You can ...
 
 - manage your theme variables
-- write readable styled components
+- write more readable styled components
 - manage your mixins
 - easy `polished` support for all your colors
 
@@ -13,7 +13,7 @@ You can ...
 
 Before:
 
-```
+```es6
 export const Wrapper = styled.section`
   ${gutter(8) // custom mixin};
   width: 100%;
@@ -32,21 +32,21 @@ export const Wrapper = styled.section`
 
 After:
 
-```
+```js
 import UI from "./theme";
 const { cond, is, variant, size, wrapper } = UI;
 
 export const Wrapper = styled.section`
-  ${gutter(size`card.gutter`) // custom mixin};
+  ${gutter(size`card.gutter`) /* custom mixin */ };
   width: 100%;
-  height: ${cond({ if: "liquid", then: "100%", else: null }) // conditions };
+  height: ${cond({ if: "liquid", then: "100%", else: null }) /* conditions */ };
   margin-top: ${cond({
     if: is.in("margin","top"),
     then: size`card:wrapper.margin|px`,
-    else: null }) // conditions
+    else: null }) /* conditions */
   };
-  padding: ${size`card:wrapper.padding|px` // sizing };
-  background: ${variant.main // variants };
+  padding: ${size`card:wrapper.padding|px` /* sizing */ };
+  background: ${variant.main /* variants */ };
 `;
 ```
 
@@ -58,7 +58,7 @@ export const Wrapper = styled.section`
 
 theme.js
 
-```
+```js
 import StyledLib from "../utils/styled-lib";
 import * as allMixins from "./mixins";
 
@@ -102,7 +102,7 @@ export default {
 
 App.js
 
-```
+```js
 import { theme } from "./theme"
 
 export const = App (props)=>{
@@ -116,7 +116,7 @@ export const = App (props)=>{
 
 Button/styled.js
 
-```
+```js
 import UI from "./theme";
 const { cond, is, variant, size, wrapper // mixin } = UI;
 ```
@@ -127,7 +127,7 @@ const { cond, is, variant, size, wrapper // mixin } = UI;
 
 Button/index.js
 
-```
+```js
 import UI from "../../theme";
 const { uiProps } = UI;
 
@@ -147,7 +147,7 @@ class Button extends React.Component {
 
 home.js
 
-```
+```js
 <Button black large margin={["top","left"]}>Login</>
 ```
 
@@ -412,7 +412,7 @@ You can change `styled-lib` default options.
 
 #### Usage
 
-```
+```js
 const Lib = new StyledLib({
   mixins: allMixins,
   theme: themeVars,
@@ -424,7 +424,7 @@ const Lib = new StyledLib({
 
 #### Default options
 
-```
+```js
 {
   // variant/color options
   VARIANT: {
@@ -435,8 +435,7 @@ const Lib = new StyledLib({
     asProp: true,
     optionsAsProp: true,
     contrastKey: "contrast",
-    mainKey: "main",
-    ...options.VARIANT
+    mainKey: "main"
   },
 
   // depth options
@@ -452,8 +451,7 @@ const Lib = new StyledLib({
       "overlay",
       "superior",
       "declaration"
-    ],
-    ...options.DEPTH
+    ]
   },
 
   // size options
@@ -469,18 +467,16 @@ const Lib = new StyledLib({
       "huge",
       "extreme"
     ],
-    default: "normal",
-    ...options.SIZE
+    default: "normal"
   },
 
   // unit options
   UNIT: {
-    default: "px",
-    ...options.UNIT
+    default: "px"
   },
 
   // prop options
-  UIPROPS: [...options.UIPROPS],
+  UIPROPS: [],
 
   // OPERATORS
   OPERATORS: {
@@ -494,8 +490,7 @@ const Lib = new StyledLib({
     gt: " > ",
     gte: " >= ",
     lt: " < ",
-    lte: " <= ",
-    ...options.OPERATORS
+    lte: " <= "
   }
 };
 ```
@@ -504,18 +499,18 @@ const Lib = new StyledLib({
 
 Just wrap your mixins like this.
 
-```
+```js
 export default ({
   options, cond, is, or, get, size
   // you can use any helper styled-lib provides + your options
 }) => {
   return (s, width, height) => {
-    return p => { return // your mixin code will be here };
+    return p => { return; } // your mixin code will be here ;
   };
 };
 ```
 
-```
+```js
 export const Button = styled.div`
   ${gutter(size`card.gutter`)};
 `
